@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.store.mapper.DistrictMapper">
+	<!-- 通过上级行政区的code查找其所管辖的下级行政区 -->
+	<!-- List<District> findByParent(String parent); -->
+	<select id="findByParent" resultType="cn.tedu.store.entity.District">
+		select id,parent,code,name
+		from t_dict_district where parent=#{parent} order by code
+	</select>
+
+	<!-- 通过code查找行政区 -->
+	<!-- District findByCode(String code); -->
+	<select id="findByCode" resultType="cn.tedu.store.entity.District">
+		select id,parent,code,name
+		from t_dict_district where code=#{code}
+	</select>
+</mapper>

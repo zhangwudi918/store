@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.store.mapper.CartMapper">
+	<!--通过用户id和商品id查找购物车数据 -->
+	<!-- Cart findByUidAndGid(@Param("uid") Integer uid,@Param("gid") Long gid); -->
+	<select id="findByUidAndGid" resultType="cn.tedu.store.entity.Cart">
+		select id,count from
+		t_cart where uid=#{uid} and gid=#{gid}
+	</select>
+
+	<!--向购物车中添加新数据 -->
+	<!-- Integer addnew(Cart cart); -->
+	<insert id="addnew" parameterType="cn.tedu.store.entity.Cart"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		t_cart(uid,gid,price,count,created_user,created_time,modified_user,
+		modified_time)
+		values(#{uid},#{gid},#{price},#{count},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime})
+	</insert>
+
+	<!--修改指定id的购物车数据的数量 -->
+	<!--Integer updateCount(@Param("id")Integer id,@Param("count")Integer count); -->
+	<update id="updateCount">
+		update t_cart set
+		count=#{count},modified_user=#{modifiedUser},modified_time=#{modifiedTime}
+		where id=#{id}
+	</update>
+
+	<!-- 通过用户id查询其购物车所有信息 -->
+	<!-- List<CartVo> findByUid(Integer uid); -->
+	<select id="findByUid" resultType="cn.tedu.store.vo.CartVO">
+		select t_cart.id,gid,t_cart.price oldPrice,count,image,title,t_goods.price
+		newPrice from t_cart inner join t_goods on t_cart.gid=t_goods.id
+		where uid=#{uid} order by t_cart.id;
+	</select>
+
+<!--  根据id查找匹配数据，没有时则返回null-->
+<!--  Cart findById(Integer id);-->
+<select id="findById" resultType="cn.tedu.store.entity.Cart">
+select count,uid from t_cart where id=#{id}
+</select>
+
+<select id="findByIds" resultType="cn.tedu.store.vo.CartVO">
+select t_cart.id,gid,t_cart.price oldPrice,count,image,title,t_goods.price
+		newPrice from t_cart inner join t_goods on t_cart.gid=t_goods.id
+		where t_cart.id in
+		<foreach collection="array" item="id" separator="," open="(" close=")">
+		#{id}
+		</foreach>
+		 order by t_cart.id
+</select>
+</mapper>

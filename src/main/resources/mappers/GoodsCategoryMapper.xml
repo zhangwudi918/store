@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="cn.tedu.store.mapper.GoodsCategoryMapper">
+
+<!-- 通过父类id查找指定父级分类下的所有子级分类的数据  -->
+<!--List<GoodsCategory> findByParentId(Long parentId); -->
+<select id="findByParentId" resultType="cn.tedu.store.entity.GoodsCategory">
+select id,name from  t_goods_category where parent_id=#{parentId} order by sort_order desc
+
+</select>
+
+</mapper>
